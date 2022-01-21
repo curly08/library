@@ -20,10 +20,11 @@ Book.prototype.getInfo = function() {
 };
 
 function displayBooks() {
+  const library = document.querySelector('.library');
+
   myLibrary.forEach((book) => {
-    const body = document.querySelector('body');
     const article = document.createElement('article');
-    body.appendChild(article);
+    library.appendChild(article);
     const title = document.createElement('h2');
     title.textContent = book.title;
     const list = document.createElement('ul');
@@ -45,3 +46,14 @@ const theReturn = new Book('The Return of the King', 'J. R. R. Tolkien', 416, 0)
 
 addToLibrary(theHobbit, theFellowship, theTowers, theReturn);
 displayBooks();
+
+// Add Book Form
+function showForm() {
+  const newBookForm = document.getElementById('new-book-form');
+
+  if (newBookForm.style.display === "block") {
+    newBookForm.style.display = "none";
+  } else {
+    newBookForm.style.display = "block";
+  };
+};
