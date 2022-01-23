@@ -1,13 +1,10 @@
 // Book Object
+
 function Book(title, author, pages, read) {
   this.title = title
   this.author = author
   this.pages = pages
   this.read = read
-};
-
-function addToLibrary(...args) {
-  myLibrary.push(...args);
 };
 
 Book.prototype.getInfo = function() {
@@ -18,14 +15,20 @@ Book.prototype.getInfo = function() {
   };
 };
 
-function displayBooks(...args) {
+// Add, Delete, and Display library functions
+
+function addToLibrary(...args) {
+  myLibrary.push(...args);
+};
+
+function displayBooks() {
   const library = document.querySelector('.library');
 
-  args.forEach((book) => {
-    const title = document.createElement('h2');
-    title.textContent = book.title;
+  myLibrary.forEach((book, index) => {
     const article = document.createElement('article');
     library.appendChild(article);
+    const title = document.createElement('h2');
+    title.textContent = book.title;
     const list = document.createElement('ul');
     const liAuthor = document.createElement('li');
     liAuthor.textContent = `Author: ${book.author}`;
@@ -33,9 +36,22 @@ function displayBooks(...args) {
     liPages.textContent = `Number of Pages: ${book.pages}`;
     const liRead = document.createElement('li');
     liRead.textContent = `Status: ${book.read ? 'Read' : 'Not Read Yet'}`;
-    article.append(title, list);
     list.append(liAuthor, liPages, liRead);
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = "Delete";
+    deleteBtn.classList.add("delete-btn");
+    deleteBtn.dataset.index = index;
+    deleteBtn.addEventListener('click', () => {
+      deleteBook(deleteBtn.dataset.index);
+    });
+    article.append(title, list, deleteBtn);
   });
+};
+
+function deleteBook(index) {
+  removeArticles();
+  myLibrary.splice(index, 1);
+  displayBooks();
 };
 
 // mock data
@@ -48,11 +64,10 @@ const theReturn = new Book('The Return of the King', 'J. R. R. Tolkien', 416, 0)
 
 addToLibrary(theHobbit, theFellowship, theTowers, theReturn);
 
-myLibrary.forEach((book) => {
-  displayBooks(book);
-})
+displayBooks();
 
 // Add Book Form
+
 const newBookForm = document.getElementById('new-book-form');
 
 function showForm() {
@@ -63,12 +78,20 @@ function showForm() {
   };
 };
 
+function removeArticles() {
+  const articles = document.querySelectorAll('article');
+  articles.forEach((article) => {
+    article.remove();
+  });
+};
+
 newBookForm.addEventListener('submit', function(event) {
   event.preventDefault();
+  removeArticles();
   addToLibrary(new Book(newBookForm.elements['title'].value,
                newBookForm.elements['author'].value,
                newBookForm.elements['pages'].value,
                newBookForm.elements['read-status'].checked));
-  displayBooks(myLibrary[myLibrary.length - 1]);
+  displayBooks();
   this.reset();
 });
