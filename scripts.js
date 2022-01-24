@@ -7,6 +7,10 @@ function Book(title, author, pages, read) {
   this.read = read
 };
 
+Book.prototype.toggleReadStatus = function() {
+  this.read = this.read === 1 ? 0 : 1;
+};
+
 Book.prototype.getInfo = function() {
   if (this.read) {
     return this.title + " by " + this.author + ", " + this.pages + " pages, read";
@@ -39,18 +43,29 @@ function displayBooks() {
     list.append(liAuthor, liPages, liRead);
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = "Delete";
-    deleteBtn.classList.add("delete-btn");
     deleteBtn.dataset.index = index;
     deleteBtn.addEventListener('click', () => {
       deleteBook(deleteBtn.dataset.index);
     });
-    article.append(title, list, deleteBtn);
+    const editBtn = document.createElement('button');
+    editBtn.textContent = "Change Read Status";
+    editBtn.dataset.index = index;
+    editBtn.addEventListener('click', () => {
+      changeReadStatus(editBtn.dataset.index);
+    });
+    article.append(title, list, deleteBtn, editBtn);
   });
 };
 
 function deleteBook(index) {
   removeArticles();
   myLibrary.splice(index, 1);
+  displayBooks();
+};
+
+function changeReadStatus(index) {
+  removeArticles();
+  myLibrary[index].toggleReadStatus();
   displayBooks();
 };
 
